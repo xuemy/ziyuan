@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g ,request
 from contextlib import closing
 import os
 import sqlite3
@@ -24,32 +24,53 @@ app.config.from_object(__name__)
 
 #============数据库连接====================
 def connect_db():
-	return database.Connection(app.config['MYSQL_HOST'],app.config['MYSQL_DB'],app.config['MYSQL_USER'],app.config['MYSQL_PASSWD'])
+    return database.Connection(app.config['MYSQL_HOST'],app.config['MYSQL_DB'],app.config['MYSQL_USER'],app.config['MYSQL_PASSWD'])
 
 def init_db():
-	with closing(connect_db) as db:
-		with app.open_resource('pinziyuan.sql') as f:
-			db._execute(f.read())
+    with closing(connect_db) as db:
+        with app.open_resource('pinziyuan.sql') as f:
+            db._execute(f.read())
 @app.before_request
 def before_request():
-	g.db = connect_db()
+    g.db = connect_db()
 
 @app.teardown_request
 def teardown_request(exception):
-	g.db.close()
+    g.db.close()
 #==========================================
 
 @app.route('/')
 def index():
-	# sql ="select * from ziyuan where `title` like '%s%' " %'python'
-	like = '%' + '微软' + '%'
-	sql = '''select * from ziyuan where `title` like `%s%%` '''%('python')
-	import time
-	t = time.time()
-	cur = g.db.query('''select * from ziyuan where `title` like %s ''',('%音乐%'))
-	# cur = None
-	t2 = time.time()
-	return render_template('index.html',cur = cur,t = t2-t,sql = sql,num = len(cur))
+    # sql ="select * from ziyuan where `title` like '%s%' " %'python'
+    # like = '%' + '微软' + '%'
+    # sql = '''select * from ziyuan where `title` like `%s%%` '''%('python')
+    # import time
+    # t = time.time()
+    # cur = g.db.query('''select * from ziyuan where `title` like %s ''',('%音乐%'))
+    # # cur = None
+    # t2 = time.time()
+    return render_template('index.html')
+
+/**
+ * search function
+ */
+@app.route('/search')
+def search():
+    return request.args.get('search','')
+
+#============子列表处理====================
+
+#电影
+@app.route('/movie')
+def moive():
+    return render_template('subindex.html')
+
+#电视剧
+
+#============error handler====================
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'),404
 
 if __name__ == '__main__':
-	app.run()
+    app.run()

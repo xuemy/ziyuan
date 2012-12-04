@@ -1,1 +1,10 @@
 /*utf-e*/
+
+body{
+	padding-top: 40px;
+	position: relative;
+}
+
+body > .navbar{
+	font-size: 16px;
+}
