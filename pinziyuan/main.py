@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, g ,request
+from flask import Flask, render_template, g ,request ,url_for
 from contextlib import closing
 import os
 import sqlite3
@@ -51,9 +51,7 @@ def index():
     # t2 = time.time()
     return render_template('index.html')
 
-/**
- * search function
- */
+
 @app.route('/search')
 def search():
     return request.args.get('search','')
@@ -61,9 +59,10 @@ def search():
 #============子列表处理====================
 
 #电影
-@app.route('/movie')
-def moive():
-    return render_template('subindex.html')
+@app.route('/movie/')
+@app.route('/movie/<int:page>')
+def moive(page = 1):
+    return render_template('subindex.html',page = page)
 
 #电视剧
 
@@ -72,5 +71,3 @@ def moive():
 def page_not_found(e):
     return render_template('404.html'),404
 
-if __name__ == '__main__':
-    app.run()
