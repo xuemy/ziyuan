@@ -8,3 +8,9 @@ CREATE table if not exists `ed2k`(
 	`title` varchar(1000) not null,
 	``
 )
+
+-- count table
+CREATE table if not exists 'count'(
+	'id' int not null auto_increment,
+	'count' int(10) not null,
+)
