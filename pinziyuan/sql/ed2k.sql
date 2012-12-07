@@ -12,5 +12,6 @@ CREATE table if not exists `ed2k`(
 -- count table
 CREATE table if not exists 'count'(
 	'id' int not null auto_increment,
+	'category'
 	'count' int(10) not null,
 )
